@@ -19,24 +19,27 @@ These are my notes
        p    -->       g   n
       / \              \
      T   n              T
+```c
 p : node pointer;
 p := n.right;
 n.right := p.left;
 p.left := n;
 n := p
-
+```
 #Right Rotation#
          g              p
         /              / \
        p    -->       n   g
       / \            /
      n   T          T
+
+```c
 p : node pointer;
 p := n.left;
 n.left := p.right;
 p.right := n;
 n := p
-
+```
 When balancing the tree we back up the chain of ancestors from insert or delete actions
 until we hit a node that is out of balance. When the tree is out of balance in a specific
 direction, we check the opposite node of the heavy side to see if it is higher than its
@@ -44,11 +47,15 @@ sibling, and perform an inside rotation against that child on the heavy side
 prior to doing the standard rotation.
     
 I've read explanations like that for days... and they make little sense so here's an example.
+
+```pre
           A
            \
             C
            /
           B
+```
+
 A's right tree has a height of 2, while its empty left tree has a height of 0.
 This gives node A a balance factor or 2 (right heavy) and invalidates the tree's requirement that
 balance factors must be between -1 and 1 (left leaning, balanced, right leaning)
@@ -56,18 +63,25 @@ balance factors must be between -1 and 1 (left leaning, balanced, right leaning)
 Before we can do the left rotation of C, we need to have a look at C's balance as well.
     
 If C's balance is in the opposite direction of the tree's balance.
-(e.g. Abalance_factor: 2, Cbalance_factor: -1)
+(e.g. A-balance_factor: 2, C-balance_factor: -1)
     
-We right_rotate C to get:
+We right_rotate to get:
+
+```pre
        A
         \
          B
           \
            C
+```
+
 And then left rotate A to get:
+
+```pre
          B
         / \
        A   C
+```
 
 The inverse applies, but that that is really all there is to it.
 Look at the code, I am sure you will get it.
@@ -121,6 +135,7 @@ tree, it is arranged by outside forces so let's call that node
 
 Let's consider the following tree.
 
+```pre
       4
     /   \
    2     6
@@ -128,6 +143,7 @@ Let's consider the following tree.
  1   3 5   8
           / \
          7   9
+```
 
 The node we want to delete is 4, and yes 4 could be a child of some
 other node. It does not have to be root, we just don't have to care if it
@@ -230,10 +246,14 @@ From the node we want to delete, turn right, take your next left
 and keep going straight until you hit the end of the road.
 
 Now that you have found the usurper, things are pretty easy.
+
 1. Remove the usurper from the tree (Replace it with a terminal node)
+
 2. Balance all the nodes we passed while we were looking for the usurper
+
 3. Give the left and right children of the node we want to delete to the
 usurper.
+
 4. Continue back up the tree balancing until we get back to the root.
 
 PRESTO
