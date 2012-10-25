@@ -1,6 +1,4 @@
-require 'avl_tree'
-require 'test/unit'
-
+require File.expand_path('./helper', File.dirname(__FILE__))
 class TestAvlTree < Test::Unit::TestCase
 
   def setup
@@ -16,12 +14,47 @@ class TestAvlTree < Test::Unit::TestCase
     assert_equal(1, @tree['C'])
   end
 
-  def test_single_insertion
+  def test_right_insertion
     @tree.insert('A', 1)
     assert_equal(1, @tree.root.value)
     @tree.insert('B', 2)
     assert_equal(2, @tree['B'])
     assert_equal('B', @tree.right.key)
+  end
+
+  def test_left_insertion
+    @tree.insert('B', 2)
+    assert_equal('B', @tree.root.key)
+    @tree.insert('A', 1)
+    assert_equal('A', @tree.left.key)
+  end
+
+  def test_value_update_with_insert
+    @tree.insert('A', 1)
+    assert_equal(1, @tree['A'])
+    @tree.insert('A', 2)
+    assert_equal(2, @tree['A'])
+    @tree.insert('A', 2)
+  end
+
+  def test_value_update_with_hash_like_access
+    @tree.insert('A', 1)
+    assert_equal(1, @tree['A'])
+    @tree['A'] = 2
+    assert_equal(2, @tree['A'])
+  end
+
+  def test_hash_like_access
+    @tree.insert('A', 1)
+    @tree.insert('B', 2)
+    @tree.insert('C', 3)
+    assert_equal(1, @tree['A'])
+    assert_equal(2, @tree['B'])
+    assert_equal(3, @tree['C'])
+  end
+
+  def test_not_found
+    assert_equal(nil, @tree['D'])
   end
 
   def test_rotate_left
@@ -34,6 +67,16 @@ class TestAvlTree < Test::Unit::TestCase
     build_tree %w(E D C)
     assert_equal('C', @tree.left.key)
     assert_equal('E', @tree.right.key)
+  end
+
+  def test_double_rotate_right_left
+    build_tree %w(5 9 7)
+    assert_equal('7', @tree.root.key)
+  end
+
+  def test_double_rotate_left_right
+    build_tree [9, 5, 7]
+    assert_equal(7, @tree.root.key)
   end
 
   def test_multi_genration_right_side_building

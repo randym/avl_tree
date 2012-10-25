@@ -2,11 +2,75 @@ A simple implementation of the AVL tree algorithm
 NOTE: This is not production level code. Merely an exercise in
 implementing the algorithm.
 
-When in doubt -- go back to your uni...
-https://docs.google.com/viewer?a=v&q=cache:v0IXKU5xel0J:www.cs.washington.edu/education/courses/cse373/04wi/slides/lecture08.ppt+&hl=en&pid=bl&srcid=ADGEESiQn4WGxRaNDtEwfJTkw-Y733A5AmofjWd75tyEEh_nLj1fTxfvvlGVRfJutWdVgva_9i4_3CCKTBdjAWUxdEUlsyMwLE4dXoR70v-isk6bgWrxGYSYdQEtKVnBlwo2xf6wSV5N&sig=AHIEtbRLac798Xyb3H9WVAE8y57Tcu-CAw
+Extra Super Special AWESOME Thanks to @nahi and his perfect
+[implementation](https://github.com/nahi/avl_tree)
+
+When in doubt -- go back to your 
+[uni](https://docs.google.com/viewer?a=v&q=cache:v0IXKU5xel0J:www.cs.washington.edu/education/courses/cse373/04wi/slides/lecture08.ppt+&hl=en&pid=bl&srcid=ADGEESiQn4WGxRaNDtEwfJTkw-Y733A5AmofjWd75tyEEh_nLj1fTxfvvlGVRfJutWdVgva_9i4_3CCKTBdjAWUxdEUlsyMwLE4dXoR70v-isk6bgWrxGYSYdQEtKVnBlwo2xf6wSV5N&sig=AHIEtbRLac798Xyb3H9WVAE8y57Tcu-CAw)
 
 Insertion and balancing is relatively easy so I am not going to waste
-bits on it, but deletion ... brain crunch
+too many bits on it.
+
+These are my notes
+
+#Left Rotation#
+     g                  p
+      \                / \
+       p    -->       g   n
+      / \              \
+     T   n              T
+p : node pointer;
+p := n.right;
+n.right := p.left;
+p.left := n;
+n := p
+
+#Right Rotation#
+         g              p
+        /              / \
+       p    -->       n   g
+      / \            /
+     n   T          T
+p : node pointer;
+p := n.left;
+n.left := p.right;
+p.right := n;
+n := p
+
+When balancing the tree we back up the chain of ancestors from insert or delete actions
+until we hit a node that is out of balance. When the tree is out of balance in a specific
+direction, we check the opposite node of the heavy side to see if it is higher than its
+sibling, and perform an inside rotation against that child on the heavy side
+prior to doing the standard rotation.
+    
+I've read explanations like that for days... and they make little sense so here's an example.
+          A
+           \
+            C
+           /
+          B
+A's right tree has a height of 2, while its empty left tree has a height of 0.
+This gives node A a balance factor or 2 (right heavy) and invalidates the tree's requirement that
+balance factors must be between -1 and 1 (left leaning, balanced, right leaning)
+    
+Before we can do the left rotation of C, we need to have a look at C's balance as well.
+    
+If C's balance is in the opposite direction of the tree's balance.
+(e.g. Abalance_factor: 2, Cbalance_factor: -1)
+    
+We right_rotate C to get:
+       A
+        \
+         B
+          \
+           C
+And then left rotate A to get:
+         B
+        / \
+       A   C
+
+The inverse applies, but that that is really all there is to it.
+Look at the code, I am sure you will get it.
 
 #Node Deletion For Idiots Like Me#
 #A.K.A - Get Out of My Tree#
@@ -173,3 +237,8 @@ usurper.
 4. Continue back up the tree balancing until we get back to the root.
 
 PRESTO
+
+#Copyright and License
+----------
+AvlTree &copy; 2012 by [Randy Morgan](digital.ipseity@gmail.com)
+AvlTree is licensed under the MIT license. Please see the LICENSE document for more information.
